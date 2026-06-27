@@ -1,0 +1,45 @@
+-- SETUP GUIDE.txt
+IMPORTANT: HOW TO SET UP THE BAR SYSTEM
+
+=== FILE PLACEMENT ===
+
+1. MOVE ALL MODULES TO ReplicatedStorage:
+   - Move HealthBar.lua to: ReplicatedStorage/BarSystem/HealthBar
+   - Move HungerBar.lua to: ReplicatedStorage/BarSystem/HungerBar
+   - Move StaminaBar.lua to: ReplicatedStorage/BarSystem/StaminaBar
+   - Move BarManager.lua to: ReplicatedStorage/BarSystem/BarManager
+   
+   (Create the BarSystem folder in ReplicatedStorage if it doesn't exist)
+
+2. ADD THE CLIENT SETUP SCRIPT:
+   - Create a NEW LocalScript in: StarterPlayer > StarterPlayerScripts
+   - Name it "BarSetupScript"
+   - Copy the contents of ClientBarSetup.lua into it
+
+=== FINAL STRUCTURE ===
+
+ReplicatedStorage
+└── BarSystem
+    ├── HealthBar (ModuleScript)
+    ├── HungerBar (ModuleScript)
+    ├── StaminaBar (ModuleScript)
+    └── BarManager (ModuleScript)
+
+StarterPlayer
+└── StarterPlayerScripts
+    └── BarSetupScript (LocalScript) ← Contains ClientBarSetup.lua code
+
+=== WHY THIS SETUP? ===
+
+The bars MUST be created on the CLIENT SIDE (LocalScript) because they use GUI.
+ReplicatedStorage is accessible to both client and server, so we put the modules there.
+When you play the game, the LocalScript automatically creates the bars!
+
+=== TESTING ===
+
+When you play:
+1. You should see the bars appear at the top of your screen
+2. Health bar (green) - top
+3. Hunger bar (orange) - middle  
+4. Stamina bar (blue) - bottom
+5. The script tests damage and feeding automatically after 2 seconds
