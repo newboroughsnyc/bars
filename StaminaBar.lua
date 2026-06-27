@@ -40,39 +40,30 @@ function StaminaBar:CreateGui()
 		screenGui.Parent = playerGui
 	end
 	
-	-- Create background frame
+	-- Create background frame - BOTTOM LEFT POSITION
 	local bgFrame = Instance.new("Frame")
 	bgFrame.Name = "StaminaBarBackground"
-	bgFrame.Size = UDim2.new(0, 200, 0, 25)
-	bgFrame.Position = UDim2.new(0.5, -100, 0, 70)
-	bgFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	bgFrame.Size = UDim2.new(0, 80, 0, 80)
+	bgFrame.Position = UDim2.new(0, 10, 1, -270)
+	bgFrame.BackgroundColor3 = Color3.fromRGB(0, 150, 255) -- Blue
 	bgFrame.BorderSizePixel = 2
-	bgFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	bgFrame.BorderColor3 = Color3.fromRGB(0, 100, 200)
 	bgFrame.Parent = screenGui
-	
-	-- Create stamina bar
-	local staminaBar = Instance.new("Frame")
-	staminaBar.Name = "StaminaBar"
-	staminaBar.Size = UDim2.new(1, 0, 1, 0)
-	staminaBar.BackgroundColor3 = Color3.fromRGB(0, 150, 255) -- Blue
-	staminaBar.BorderSizePixel = 0
-	staminaBar.Parent = bgFrame
 	
 	-- Create text label
 	local textLabel = Instance.new("TextLabel")
 	textLabel.Name = "StaminaText"
 	textLabel.Size = UDim2.new(1, 0, 1, 0)
 	textLabel.BackgroundTransparency = 1
-	textLabel.Text = self.currentStamina .. "/" .. self.maxStamina
+	textLabel.Text = "⚡"
 	textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	textLabel.TextSize = 14
+	textLabel.TextSize = 40
 	textLabel.Font = Enum.Font.GothamBold
 	textLabel.Parent = bgFrame
 	
 	self.gui = {
 		screenGui = screenGui,
 		bgFrame = bgFrame,
-		staminaBar = staminaBar,
 		textLabel = textLabel
 	}
 end
@@ -131,18 +122,20 @@ function StaminaBar:UpdateBar()
 	if not self.gui then return end
 	
 	local staminaPercentage = self.currentStamina / self.maxStamina
-	self.gui.staminaBar.Size = UDim2.new(staminaPercentage, 0, 1, 0)
 	
 	-- Change color based on stamina level
 	if staminaPercentage > 0.5 then
-		self.gui.staminaBar.BackgroundColor3 = Color3.fromRGB(0, 150, 255) -- Blue
+		self.gui.bgFrame.BackgroundColor3 = Color3.fromRGB(0, 150, 255) -- Blue
+		self.gui.bgFrame.BorderColor3 = Color3.fromRGB(0, 100, 200)
 	elseif staminaPercentage > 0.25 then
-		self.gui.staminaBar.BackgroundColor3 = Color3.fromRGB(255, 200, 0) -- Yellow
+		self.gui.bgFrame.BackgroundColor3 = Color3.fromRGB(255, 200, 0) -- Yellow
+		self.gui.bgFrame.BorderColor3 = Color3.fromRGB(200, 150, 0)
 	else
-		self.gui.staminaBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red
+		self.gui.bgFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red
+		self.gui.bgFrame.BorderColor3 = Color3.fromRGB(200, 0, 0)
 	end
 	
-	self.gui.textLabel.Text = math.floor(self.currentStamina) .. "/" .. self.maxStamina
+	self.gui.textLabel.Text = "⚡"
 end
 
 -- Get current stamina
