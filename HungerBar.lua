@@ -11,7 +11,7 @@ function HungerBar.new(character, maxHunger)
 	self.character = character
 	self.maxHunger = maxHunger or 100
 	self.currentHunger = self.maxHunger
-	self.hungerRate = 0.5 -- Hunger decreases over time
+	self.hungerRate = 0.02 -- MUCH SLOWER - Hunger decreases over time
 	self.lastUpdateTime = tick()
 	
 	-- Create the GUI
@@ -19,6 +19,9 @@ function HungerBar.new(character, maxHunger)
 	
 	-- Start hunger drain
 	self:StartHungerDrain()
+	
+	-- Update bar on creation
+	self:UpdateBar()
 	
 	return self
 end
@@ -39,39 +42,30 @@ function HungerBar:CreateGui()
 		screenGui.Parent = playerGui
 	end
 	
-	-- Create background frame
+	-- Create background frame - BOTTOM LEFT POSITION
 	local bgFrame = Instance.new("Frame")
 	bgFrame.Name = "HungerBarBackground"
-	bgFrame.Size = UDim2.new(0, 200, 0, 25)
-	bgFrame.Position = UDim2.new(0.5, -100, 0, 40)
-	bgFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	bgFrame.Size = UDim2.new(0, 80, 0, 80)
+	bgFrame.Position = UDim2.new(0, 10, 1, -90)
+	bgFrame.BackgroundColor3 = Color3.fromRGB(255, 165, 0) -- Orange
 	bgFrame.BorderSizePixel = 2
-	bgFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	bgFrame.BorderColor3 = Color3.fromRGB(255, 100, 0)
 	bgFrame.Parent = screenGui
-	
-	-- Create hunger bar
-	local hungerBar = Instance.new("Frame")
-	hungerBar.Name = "HungerBar"
-	hungerBar.Size = UDim2.new(1, 0, 1, 0)
-	hungerBar.BackgroundColor3 = Color3.fromRGB(255, 165, 0) -- Orange
-	hungerBar.BorderSizePixel = 0
-	hungerBar.Parent = bgFrame
 	
 	-- Create text label
 	local textLabel = Instance.new("TextLabel")
 	textLabel.Name = "HungerText"
 	textLabel.Size = UDim2.new(1, 0, 1, 0)
 	textLabel.BackgroundTransparency = 1
-	textLabel.Text = self.currentHunger .. "/" .. self.maxHunger
+	textLabel.Text = "🍖"
 	textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	textLabel.TextSize = 14
+	textLabel.TextSize = 40
 	textLabel.Font = Enum.Font.GothamBold
 	textLabel.Parent = bgFrame
 	
 	self.gui = {
 		screenGui = screenGui,
 		bgFrame = bgFrame,
-		hungerBar = hungerBar,
 		textLabel = textLabel
 	}
 end
@@ -110,18 +104,20 @@ function HungerBar:UpdateBar()
 	if not self.gui then return end
 	
 	local hungerPercentage = self.currentHunger / self.maxHunger
-	self.gui.hungerBar.Size = UDim2.new(hungerPercentage, 0, 1, 0)
 	
-	-- Change color based on hunger level
+	-- Change color and border based on hunger level
 	if hungerPercentage > 0.5 then
-		self.gui.hungerBar.BackgroundColor3 = Color3.fromRGB(255, 165, 0) -- Orange
+		self.gui.bgFrame.BackgroundColor3 = Color3.fromRGB(255, 165, 0) -- Orange - Full
+		self.gui.bgFrame.BorderColor3 = Color3.fromRGB(255, 100, 0)
 	elseif hungerPercentage > 0.25 then
-		self.gui.hungerBar.BackgroundColor3 = Color3.fromRGB(255, 100, 0) -- Dark Orange
+		self.gui.bgFrame.BackgroundColor3 = Color3.fromRGB(255, 100, 0) -- Dark Orange - Medium
+		self.gui.bgFrame.BorderColor3 = Color3.fromRGB(255, 50, 0)
 	else
-		self.gui.hungerBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red
+		self.gui.bgFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red - Low
+		self.gui.bgFrame.BorderColor3 = Color3.fromRGB(200, 0, 0)
 	end
 	
-	self.gui.textLabel.Text = math.floor(self.currentHunger) .. "/" .. self.maxHunger
+	self.gui.textLabel.Text = "🍖"
 end
 
 -- Get current hunger
